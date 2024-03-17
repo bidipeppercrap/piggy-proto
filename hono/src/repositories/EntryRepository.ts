@@ -3,6 +3,7 @@ import { db } from "../db";
 import { PaginationParams } from "../params/pagination";
 import { NewEntry } from "../types";
 import { paginatedResult } from "./PaginatedResult";
+import { sql } from "kysely";
 
 export async function findEntries(c: Context, accountId: number, keyword: string, startDate: string, endDate: string, pagination: PaginationParams) {
     let query = db(c).selectFrom('entry')
@@ -19,13 +20,13 @@ export async function findEntries(c: Context, accountId: number, keyword: string
         })
     }
 
-    // if (startDate) {
-    //     query = query.where('created_at', '>=', startDate)
-    // }
+    if (startDate) {
+        query = query.where('created_at', '>=', sql<Date>`${startDate}`)
+    }
 
-    // if (endDate) {
-    //     query = query.where('created_at', '<=', endDate)
-    // }
+    if (endDate) {
+        query = query.where('created_at', '<=', sql<Date>`${endDate}`)
+    }
 
     const dataQuery = query
         .selectAll()

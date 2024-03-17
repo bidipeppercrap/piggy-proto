@@ -45,7 +45,11 @@ export async function findAccountDetailById(c: Context, id: number, keyword: str
         }
 
         if (startDate) {
-            // entryQuery = entryQuery.where('created_at', '>=', Date.now())
+            entryQuery = entryQuery.where('created_at', '>=', sql<Date>`${startDate}`)
+        }
+    
+        if (endDate) {
+            entryQuery = entryQuery.where('created_at', '<=', sql<Date>`${endDate}`)
         }
 
         const entries = await entryQuery
